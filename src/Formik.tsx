@@ -220,8 +220,9 @@ export class Formik<Values = {}, ExtraProps = {}> extends React.Component<
   }
 
   runValidateHandler(values: FormikValues): Promise<FormikErrors<Values>> {
+    
     return new Promise(resolve => {
-      const maybePromisedErrors = (this.props.validate as any)(values);
+      const maybePromisedErrors = (this.props.validate as any)(values, this);
       if (maybePromisedErrors === undefined) {
         resolve({});
       } else if (isPromise(maybePromisedErrors)) {
@@ -303,7 +304,7 @@ export class Formik<Values = {}, ExtraProps = {}> extends React.Component<
       let parsed;
       // If the first argument is not a string though, it has to be a synthetic React Event (or a fake one),
       // so we handle like we would a normal HTML change event.
-      if (!isString(eventOrTextValue)) {
+      if (!isString(eventOrTextValue) && typeof eventOrTextValue != 'number') {
         // If we can, persist the event
         // @see https://reactjs.org/docs/events.html#event-pooling
         if ((eventOrTextValue as React.ChangeEvent<any>).persist) {
